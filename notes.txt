@@ -1,0 +1,196 @@
+the meaning of a statement is the the conjunction of the terms in the body implies the head
+
+FACTS: 
+a clause with an empty body is called a fact: edge(1,2). does not have a head -> therefore this is a fact
+there is an edge between nodes 1 and 2.
+Facts are axioms --> assumed to always be true.
+
+RULES:
+a clause with both sides is a rule: path(A,B) :- edge(A,C), path(C,B). has a head
+if there is a path between c and b, and an edge between a and c, then there is a path from a to b
+
+QUERIES:
+a clause with faulsum head is a query, or a top-level goal: □ :- path(1,3).
+is there a path from 1 to 3? 
+Pose a query which the system tries to find a series of inference steps (and assignments of values to variables) that allows it to prove your query, starting from the axioms.
+
+
+problem([[3,_,_,_,_,_,_,_,4],
+[_,_,2,_,6,_,1,_,_],
+[_,1,_,9,_,8,_,2,_],
+[_,_,5,_,_,_,6,_,_],
+[_,2,_,_,_,_,_,1,_],
+[_,_,9,_,_,_,8,_,_],
+[_,8,_,3,_,4,_,6,_],
+[_,_,4,_,1,_,9,_,_],
+[5,_,_,_,_,_,_,_,7]],
+[[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]), write(X).
+
+completegrid([[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]).
+
+completegrid([[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]).
+
+%% cat(tom) :- true.
+
+%% return true if both grids have same length (stored in variable Cell_size), and that size is 9
+%% problem(X, S) :- length(X, Cell_size), length(S, Cell_size), Cell_size =:= 9.
+%% myList([1, 2, 3]).
+
+%% do the parameters to the problem fact have to be the 2 grids verbatim?
+%% problem(X,S).
+
+completegrid([[[1,2],[1,2],[1,2],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,2],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4]]]).
+
+
+completegrid([[[1,2],[1,2],[1,2],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,2],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]).
+
+false
+
+completegrid([[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]).
+
+true
+
+
+[[1,2],[1,2],[1,2],[2,1],2,2,2,3,3,1,4,1,4,2,1,4,2,4,2,5,2,6,3,6,3,7,3,8,4,8,4,9,1,2,1,6,1,7,1,8,1,9,2,7,2,8,2,9,3,9,3,2,3,3,3,4,3,5,4,3,5,1,5,2,5,3,5,4,4,4,4,5,4,6,4,7,5,5,6,3,6,4,6,5,6,6,5,6,5,7,5,8,5,9,6,7,7,5,7,6,7,7,7,8,6,1,6,2,7,2,7,3,7,4,8,4,8,5,8,6,9,6,6,8,6,9,7,9,8,7,8,8,8,9,9,7,9,8,9,9,7,1,8,1,8,2,8,3,9,1,9,2,9,3,9,4,9,5]
+
+[1,1] ... [9,9]
+
+
+cgrid([H|T]) :- 
+	nb_setval(Grid, [H|T]), 
+	nb_getval(Grid, Gcells),
+	write(GridCells),
+	length(H, size), 
+	size =:= 9,
+	rowgrid(H, T),
+	cgrid(T).
+
+
+
+% Task 1 %
+%% Define a predicate completegrid(S) that holds for a sub-grid definition, if all cells of the 9x9
+%% time grid are defined by the sub-grid definition (i.e., sub-grids do not overlap and the union of all
+%% subgrids form the 9x9 grid). Find either a counting argument or set argument, to define your predicate.
+
+nestedmember(Current_head, [Head | Tail]) :- member(Current_head,Head) ; nestedmember(Current_head,Tail). %Recursive call looking in the tail
+nestedmember(Current_head,[Tail]) :- nestedmember(Current_head,Tail). %You look for all the subsequent cases
+
+% Recursive predicate to deal with each individual list (row)
+%% H = first element, T = rest of the list
+rowgrid([], _).
+rowgrid([H|T], Tail) :- 
+	%% nl,
+	%% write([H|T]),
+	%% nl,
+	%% write(Tail),
+	%% nl,
+	%% write([H|T]),
+	%% nl,
+	%% write(H),
+	%% nl,
+	%% write(Tail), %% need tail to never change
+	\+ nestedmember([H|T], Tail), 
+	%% rowgrid(T, Tail).
+	rowgrid(T, Tail).
+
+%% setglobal(1, [H|T]) :- nb_setval(grid, [H|T]), 
+%% 	nb_getval(counter, F), 
+%% 	Fnew is F + 1,
+%% 	nb_setval(counter, Fnew).
+%% 	%% write(Fnew).
+%% setglobal(X, [H|T]) :- X, [H|T].
+%% add :- nb_getval(counter, C), CNew is C + 1, nb_setval(counter, CNew).
+% Recursive predicate to deal with the list of lists (grid)
+completegrid([]).
+completegrid([H|T]) :- 
+	%% nb_setval(Grid, T), 
+	%% grid([H|T]),
+	%% nl,
+	%% write([H|T]),
+	%% nl,
+	%% nb_getval(Grid, GridCells),
+	%% write(GridCells),
+	%% write(GridCells),
+	% H is the head list, T is the rest of the list of lists
+	%% write([H|T]),
+	%% nb_setval(counter, 1),
+	%% nb_getval(counter, Flag),
+	%% nl,
+	%% write(Flag),
+	%% setglobal(counter, [H|T]),
+	%% nb_getval(counter, Fa),
+	%% %% nb_getval(counter, Fnew),
+	%% nl,
+	%% write(Fa),
+	%% nb_getval(grid, Global),
+	%% write(Global),
+	%% write(Global_grid),
+	length(H, Row_size), 
+	Row_size =:= 9,
+	nl,
+	write(T),
+	nl,
+	rowgrid(H, T),
+	completegrid(T).
+
+
+
+
+
+% Task 2 %
+%% Define a predicate contiguousregion(S) that holds for a definition of a region, if the region is
+%% contiguous (i.e., don’t split into two regions with no connection via a grid cell)
+
+contiguousgrid([[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]]).
+true
+
+contiguousgrid([[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[3,1],[4,1],[4,2]]).
+false
