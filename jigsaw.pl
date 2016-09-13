@@ -38,9 +38,10 @@ completegrid([H|T]) :-
 %% Define a predicate contiguousregion(S) that holds for a definition of a region, if the region is
 %% contiguous (i.e., don’t split into two regions with no connection via a grid cell)
 
-%% Predicate to find neighbour if the neighbour of the cell isn't obvious from the previous cells.
-%% It recursively goes through the remaining cells and check if they're part of the grid that is valid,
-%% as well as knowing that these cells 
+%% Predicate to find neighbour if the neighbour of the cell isn't obvious from the previous cells grid.
+%% It recursively goes through the remaining cells which have not been checked and check if they're 
+%% part of the grid that is valid, as well as checking if the cell that is not immediately obvious as to
+%% whether or not it is valid, whether this cell is valid too. 
 find_prev([H|T], Heads) :-
 	H = [A|B], % A is the row position
 	B = [C|[]], % C is the column position
@@ -80,12 +81,6 @@ find_neighbour([H|T], Hp, Tp) :-
 		(length(Heads, Head_size),
 				Head_size =:= 0) ;
 		(member(H, [H|T]),
-		%% write(Cell_left), nl,
-		%% write(Cell_right), nl,
-		%% write(Cell_top), nl,
-		%% write(Cell_left), nl,
-		%% write(H), nl,
-		%% write([H|T]), nl,
 		(
 			member(Cell_left, [H|T]) ; 
 			member(Cell_right, [H|T]) ;
@@ -96,8 +91,7 @@ find_neighbour([H|T], Hp, Tp) :-
 	),
 	find_neighbour(T, Temp_heads, Tp).
 
-%% make sure size is 9?
 contiguousgrid([H|T]) :- 
 	length([H|T], Row_size),
-	Row_size =:= 9,
+	Row_size =:= 9, %% must have 9 cells
 	find_neighbour([H|T], [], T).
