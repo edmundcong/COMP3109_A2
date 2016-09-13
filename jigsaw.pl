@@ -73,10 +73,10 @@ find_neighbour([H|T], Hp, Tp) :-
 	Cell_right = [A|[Cp]],
 	Cell_top = [Am|[C]],
 	Cell_bottom = [Ap|[C]],
-	append([H], Hp, Temp_heads), %% All our previous cells
+	append([H], Hp, Temp_heads), %% All our previous cells and heads appened to Temp_heads
 	remove_head(Temp_heads, Heads), %% Remove our head so it won't automatically be true
 	(
-		(length(Heads, Head_size),
+		(length(Heads, Head_size), %% If the first case where our Heads is []
 				Head_size =:= 0) ;
 		member(Cell_left, Heads) ; 
 		member(Cell_right, Heads) ;
@@ -94,6 +94,7 @@ find_neighbour([H|T], Hp, Tp) :-
 	find_neighbour(T, Temp_heads, Tp).
 
 contiguousgrid([H|T]) :- 
+	is_set([H|T]), %% check for duplicates
 	length([H|T], Row_size),
 	Row_size =:= 9, %% must have 9 cells
 	find_neighbour([H|T], [], T).
