@@ -46,11 +46,13 @@ find_prev([H|T], Heads) :-
 	H = [A|B], % A is the row position
 	B = [C|[]], % C is the column position
 	Ap is A+1, Cm is C-1, Am is A-1, Cp is C+1,
+	%% -+1 to each entry [i,j] to get neighbours
 	Cell_left = [A|[Cm]],
 	Cell_right = [A|[Cp]],
 	Cell_top = [Am|[C]],
 	Cell_bottom = [Ap|[C]],
 		(
+		%% Check if it's neighbour is in our Heads list
 		member(Cell_left, Heads) ; 
 		member(Cell_right, Heads) ;
 		member(Cell_top, Heads) ; 
@@ -71,22 +73,22 @@ find_neighbour([H|T], Hp, Tp) :-
 	Cell_right = [A|[Cp]],
 	Cell_top = [Am|[C]],
 	Cell_bottom = [Ap|[C]],
-	append([H], Hp, Temp_heads),
-	remove_head(Temp_heads, Heads),
+	append([H], Hp, Temp_heads), %% All our previous cells
+	remove_head(Temp_heads, Heads), %% Remove our head so it won't automatically be true
 	(
+		(length(Heads, Head_size),
+				Head_size =:= 0) ;
 		member(Cell_left, Heads) ; 
 		member(Cell_right, Heads) ;
 		member(Cell_top, Heads) ; 
 		member(Cell_bottom, Heads) ;
-		(length(Heads, Head_size),
-				Head_size =:= 0) ;
-		(member(H, [H|T]),
 		(
-			member(Cell_left, [H|T]) ; 
-			member(Cell_right, [H|T]) ;
-			member(Cell_top, [H|T]) ; 
-			member(Cell_bottom, [H|T]) 
-		),
+			(
+				member(Cell_left, [H|T]) ; 
+				member(Cell_right, [H|T]) ;
+				member(Cell_top, [H|T]) ; 
+				member(Cell_bottom, [H|T]) 
+			),
 		find_prev(T, Heads))
 	),
 	find_neighbour(T, Temp_heads, Tp).
