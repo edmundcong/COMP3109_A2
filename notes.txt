@@ -194,3 +194,287 @@ true
 
 contiguousgrid([[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[3,1],[4,1],[4,2]]).
 false
+
+
+	nl, write('H: '), write(H),
+	nl, write('Cell_left: '), write(Cell_left),
+	nl, write('Cell_right: '), write(Cell_right),
+	nl, write('Cell_top: '), write(Cell_top),
+	nl, write('Cell_bottom: '), write(Cell_bottom),
+	nl, write('Tp: '), write(Tp), nl,
+
+
+% Task 1 %
+%% Define a predicate completegrid(S) that holds for a sub-grid definition, if all cells of the 9x9
+%% time grid are defined by the sub-grid definition (i.e., sub-grids do not overlap and the union of all
+%% subgrids form the 9x9 grid). Find either a counting argument or set argument, to define your predicate.
+
+%% need to get this to fail where |rows| < 9 
+
+remove_head([_|Tail], Tail). %remove first element and return tail
+
+to_pairs([], []).
+to_pairs([A, B | Tb], [[A, B] | Ta]) :- to_pairs(Tb, Ta).
+
+complete_row([], _).
+complete_row([H|T], Tail) :- 
+	union([H|T], Tail, N),
+	remove_head(N, Tprime),
+	H = [A|B],
+	A > 0, A < 10, B > 0, B < 10,
+	flatten(Tprime, Flist),
+	to_pairs(Flist, Plist),
+	intersection([H], Plist, K),
+	length(K, 0),
+	complete_row(T, Tail).
+
+compute_grid([]).
+compute_grid([H|T]) :- 
+	length(H, Row_size), 
+	Row_size =:= 9,
+	complete_row(H, T),
+	compute_grid(T).
+
+completegrid([H|T]) :-
+	length([H|T], Grid_size), %% Check to make sure grid has 9 lists
+	Grid_size =:= 9,
+	compute_grid([H|T]).
+
+% Task 2 %
+%% Define a predicate contiguousregion(S) that holds for a definition of a region, if the region is
+%% contiguous (i.e., don’t split into two regions with no connection via a grid cell)
+
+% [i,j] must be able to find a neighbour that is either [i +- 1, j +- 1], (=1 cant -, =9 cant +)
+% for all [i, j]t
+find_neighbour([], Tp).
+find_neighbour([H|T], Tp) :- 
+	H = [A|B], % A is the row position
+	B = [C|[]], % C is the column position
+	Ap is A+1, Cm is C-1, Am is A-1, Cp is C+1,
+	Cell_left = [A|[Cm]],
+	Cell_right = [A|[Cp]],
+	Cell_top = [Am|[C]],
+	Cell_bottom = [Ap|[C]],
+	(member(Cell_left, Tp); 
+	member(Cell_right, Tp);
+	member(Cell_top, Tp); 
+	member(Cell_bottom, Tp)),
+	find_neighbour(T, Tp).
+
+%% make sure size is 9?
+contiguousgrid([H|T]) :- 
+	%% write([H|T]),
+	%% length([H|T], Row_size),
+	%% Row_size =:= 9,
+	find_neighbour([H|T], T).
+
+
+
+
+
+
+% Task 1 %
+%% Define a predicate completegrid(S) that holds for a sub-grid definition, if all cells of the 9x9
+%% time grid are defined by the sub-grid definition (i.e., sub-grids do not overlap and the union of all
+%% subgrids form the 9x9 grid). Find either a counting argument or set argument, to define your predicate.
+
+%% need to get this to fail where |rows| < 9 
+
+remove_head([_|Tail], Tail). %remove first element and return tail
+
+to_pairs([], []).
+to_pairs([A, B | Tb], [[A, B] | Ta]) :- to_pairs(Tb, Ta).
+
+complete_row([], _).
+complete_row([H|T], Tail) :- 
+	union([H|T], Tail, N),
+	remove_head(N, Tprime),
+	H = [A|B],
+	A > 0, A < 10, B > 0, B < 10,
+	flatten(Tprime, Flist),
+	to_pairs(Flist, Plist),
+	intersection([H], Plist, K),
+	length(K, 0),
+	complete_row(T, Tail).
+
+compute_grid([]).
+compute_grid([H|T]) :- 
+	length(H, Row_size), 
+	Row_size =:= 9,
+	complete_row(H, T),
+	compute_grid(T).
+
+completegrid([H|T]) :-
+	length([H|T], Grid_size), %% Check to make sure grid has 9 lists
+	Grid_size =:= 9,
+	compute_grid([H|T]).
+
+% Task 2 %
+%% Define a predicate contiguousregion(S) that holds for a definition of a region, if the region is
+%% contiguous (i.e., don’t split into two regions with no connection via a grid cell)
+
+% [i,j] must be able to find a neighbour that is either [i +- 1, j +- 1], (=1 cant -, =9 cant +)
+% for all [i, j]t
+find_neighbour([], _, _).
+find_neighbour([H|T], Hp, Tp) :- 
+	H = [A|B], % A is the row position
+	B = [C|[]], % C is the column position
+	Ap is A+1, Cm is C-1, Am is A-1, Cp is C+1,
+	Cell_left = [A|[Cm]],
+	Cell_right = [A|[Cp]],
+	Cell_top = [Am|[C]],
+	Cell_bottom = [Ap|[C]],
+	nl, write('Cell_left: '), write(Cell_left),
+	nl, write('Cell_right: '), write(Cell_right),
+	nl, write('Cell_top: '), write(Cell_top),
+	nl, write('Cell_bottom: '), write(Cell_bottom),
+	delete(Tp, H, T_nH),
+	nl, write('T_nH: '), write(T_nH),
+	delete(T_nH, T, T_nHT),
+	nl, write('T_nHT: '), write(T_nHT),
+	nl, write('T: '), write(T),
+	nl, write('H: '), write(H), 
+	append([H], Hp, Hs),
+	nl, write(Hs), nl,
+	nl, write('Deleted Hs: '),
+	remove_head(Hs, N),
+	write(N),
+	nl,
+	%% (member(Cell_left, Hs); 
+	%% member(Cell_right, Hs);
+	%% member(Cell_top, Hs); 
+	%% member(Cell_bottom, Hs)),
+	find_neighbour(T, Hs, Tp).
+
+%% make sure size is 9?
+contiguousgrid([H|T]) :- 
+	length([H|T], Row_size),
+	Row_size =:= 9,
+	find_neighbour([H|T], [], T).
+
+contiguousgrid([[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]]).
+contiguousgrid([[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]]).
+contiguousgrid([[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]]).
+contiguousgrid([[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]]).
+contiguousgrid([[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]]).
+contiguousgrid([[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]]).
+contiguousgrid([[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]]).
+contiguousgrid([[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]]).
+contiguousgrid([[7,1],[8,1],[8,2],[8,3],[9,1],[9,6],[9,3],[9,4],[9,5]]).
+
+contiguousgrid([[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,3],[5,4],[5,5]]).
+
+completegrid([[[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,1],[4,1],[4,2]],
+[[1,4],[2,4],[2,5],[2,6],[3,6],[3,7],[3,8],[4,8],[4,9]],
+[[1,5],[1,6],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,9]],
+[[3,2],[3,3],[3,4],[3,5],[4,3],[5,1],[5,2],[5,3],[5,4]],
+[[4,4],[4,5],[4,6],[4,7],[5,5],[6,3],[6,4],[6,5],[6,6]],
+[[5,6],[5,7],[5,8],[5,9],[6,7],[7,5],[7,6],[7,7],[7,8]],
+[[6,1],[6,2],[7,2],[7,3],[7,4],[8,4],[8,5],[8,6],[9,6]],
+[[6,8],[6,9],[7,9],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],
+[[7,1],[8,1],[8,2],[8,3],[9,1],[9,2],[9,3],[9,4],[9,5]]]).
+
+
+% Task 1 %
+%% Define a predicate completegrid(S) that holds for a sub-grid definition, if all cells of the 9x9
+%% time grid are defined by the sub-grid definition (i.e., sub-grids do not overlap and the union of all
+%% subgrids form the 9x9 grid). Find either a counting argument or set argument, to define your predicate.
+
+%% need to get this to fail where |rows| < 9 
+
+remove_head([_|Tail], Tail). %remove first element and return tail
+
+to_pairs([], []).
+to_pairs([A, B | Tb], [[A, B] | Ta]) :- to_pairs(Tb, Ta).
+
+complete_row([], _).
+complete_row([H|T], Tail) :- 
+	union([H|T], Tail, N),
+	remove_head(N, Tprime),
+	H = [A|B],
+	A > 0, A < 10, B > 0, B < 10,
+	flatten(Tprime, Flist),
+	to_pairs(Flist, Plist),
+	intersection([H], Plist, K),
+	length(K, 0),
+	complete_row(T, Tail).
+
+compute_grid([]).
+compute_grid([H|T]) :- 
+	length(H, Row_size), 
+	Row_size =:= 9,
+	complete_row(H, T),
+	compute_grid(T).
+
+completegrid([H|T]) :-
+	length([H|T], Grid_size), %% Check to make sure grid has 9 lists
+	Grid_size =:= 9,
+	compute_grid([H|T]).
+
+% Task 2 %
+%% Define a predicate contiguousregion(S) that holds for a definition of a region, if the region is
+%% contiguous (i.e., don’t split into two regions with no connection via a grid cell)
+
+find_prev([H|T], Heads) :-
+	H = [A|B], % A is the row position
+	B = [C|[]], % C is the column position
+	Ap is A+1, Cm is C-1, Am is A-1, Cp is C+1,
+	Cell_left = [A|[Cm]],
+	Cell_right = [A|[Cp]],
+	Cell_top = [Am|[C]],
+	Cell_bottom = [Ap|[C]],
+	%% nl, write('Heads: '), write(Heads), nl, 
+	%% nl, write('Cell_left: '), write(Cell_left),
+	%% nl, write('Cell_right: '), write(Cell_right),
+	%% nl, write('Cell_top: '), write(Cell_top),
+	%% nl, write('Cell_bottom: '), write(Cell_bottom),
+	%% nl, write('h: '), write(H),
+		(
+		member(Cell_left, Heads) ; 
+		member(Cell_right, Heads) ;
+		member(Cell_top, Heads) ; 
+		member(Cell_bottom, Heads) ;
+		(length(Heads, Head_size),
+				Head_size =:= 0) ;
+		(member(H, [H|T]), find_prev(T, Heads))
+	).
+
+% [i,j] must be able to find a neighbour that is either [i +- 1, j +- 1], (=1 cant -, =9 cant +)
+% for all [i, j]t
+find_neighbour([], _, _).
+find_neighbour([H|T], Hp, Tp) :- 
+	H = [A|B], % A is the row position
+	B = [C|[]], % C is the column position
+	Ap is A+1, Cm is C-1, Am is A-1, Cp is C+1,
+	Cell_left = [A|[Cm]],
+	Cell_right = [A|[Cp]],
+	Cell_top = [Am|[C]],
+	Cell_bottom = [Ap|[C]],
+	%% nl, write('Cell_left: '), write(Cell_left),
+	%% nl, write('Cell_right: '), write(Cell_right),
+	%% nl, write('Cell_top: '), write(Cell_top),
+	%% nl, write('Cell_bottom: '), write(Cell_bottom),
+	%% nl, write('h: '), write(H),
+	append([H], Hp, Temp_heads),
+	%% nl, write('Heads: '),
+	remove_head(Temp_heads, Heads),
+	%% write(Heads),
+	%% nl,
+	%% write(H), 
+	%% nl, write([H|T]), nl,
+	(
+		member(Cell_left, Heads) ; 
+		member(Cell_right, Heads) ;
+		member(Cell_top, Heads) ; 
+		member(Cell_bottom, Heads) ;
+		(length(Heads, Head_size),
+				Head_size =:= 0) ;
+		(member(H, [H|T]), find_prev(T, Heads))
+	),
+	find_neighbour(T, Temp_heads, Tp).
+
+%% make sure size is 9?
+contiguousgrid([H|T]) :- 
+	length([H|T], Row_size),
+	Row_size =:= 9,
+	find_neighbour([H|T], [], T).
