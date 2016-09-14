@@ -53,13 +53,13 @@ find_prev([H|T], Heads) :-
 	Cell_bottom = [Ap|[C]],
 		(
 		%% Check if it's neighbour is in our Heads list
-		member(Cell_left, Heads) ; 
-		member(Cell_right, Heads) ;
-		member(Cell_top, Heads) ; 
-		member(Cell_bottom, Heads) ;
+		member(Cell_left, Heads), ! ; 
+		member(Cell_right, Heads), ! ;
+		member(Cell_top, Heads), ! ; 
+		member(Cell_bottom, Heads), ! ;
 		(length(Heads, Head_size),
-				Head_size =:= 0) ;
-		(member(H, [H|T]), find_prev(T, Heads))
+				Head_size =:= 0), ! ;
+		(member(H, [H|T]), find_prev(T, Heads), !)
 	).
 
 % [i,j] must be able to find a neighbour that is either [i +- 1, j +- 1], (=1 cant -, =9 cant +)
@@ -77,24 +77,24 @@ find_neighbour([H|T], Hp, Tp) :-
 	remove_head(Temp_heads, Heads), %% Remove our head so it won't automatically be true
 	(
 		(length(Heads, Head_size), %% If the first case where our Heads is []
-				Head_size =:= 0) ;
-		member(Cell_left, Heads) ; 
-		member(Cell_right, Heads) ;
-		member(Cell_top, Heads) ; 
-		member(Cell_bottom, Heads) ;
+				Head_size =:= 0), ! ;
+		member(Cell_left, Heads), ! ; %% Using cut (!) because if we find it's a member then we're done -- no need to continue proof-finding
+		member(Cell_right, Heads), ! ;
+		member(Cell_top, Heads), ! ; 
+		member(Cell_bottom, Heads), ! ;
 		(
 			(
-				member(Cell_left, [H|T]) ; 
-				member(Cell_right, [H|T]) ;
-				member(Cell_top, [H|T]) ; 
-				member(Cell_bottom, [H|T]) 
+				member(Cell_left, [H|T]), ! ; 
+				member(Cell_right, [H|T]), ! ;
+				member(Cell_top, [H|T]), ! ; 
+				member(Cell_bottom, [H|T]), ! 
 			),
 		find_prev(T, Heads))
 	),
 	find_neighbour(T, Temp_heads, Tp).
 
 contiguousgrid([H|T]) :- 
-	is_set([H|T]), %% check for duplicates
+	is_set([H|T]), %% check for duplicates. According to EDlms either checking or not checking is fine as long as it yields contiguous when valid
 	length([H|T], Row_size),
 	Row_size =:= 9, %% must have 9 cells
 	find_neighbour([H|T], [], T).
