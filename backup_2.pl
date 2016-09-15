@@ -12,22 +12,19 @@ to_pairs([A, B | Tb], [[A, B] | Ta]) :- to_pairs(Tb, Ta).
 
 complete_row([], _).
 complete_row([H|T], Tail) :- 
-	%% get full grid
 	union([H|T], Tail, N),
-	%% then remove first [x,y] cell so we can flatten
 	remove_head(N, Tprime),
 	H = [A|B],
-	%% range inequalities
 	A > 0, A < 10, B > 0, B < 10,
 	flatten(Tprime, Flist),
 	to_pairs(Flist, Plist),
-	intersection([H], Plist, K), %% check for empty intersection set k
+	intersection([H], Plist, K),
 	length(K, 0),
-	complete_row(T, Tail). %% call recursively on tail
+	complete_row(T, Tail).
 
 compute_grid([]).
 compute_grid([H|T]) :- 
-	length(H, Row_size), %% make sure we have correct length
+	length(H, Row_size), 
 	Row_size =:= 9,
 	complete_row(H, T),
 	compute_grid(T).
@@ -108,10 +105,38 @@ contiguousgrid([H|T]) :-
 
 :- use_module(library(clpfd)).
 
- % beginning of sudoku rule itself
-solve(G, S_rows, X) :- 
 
-X = S_rows, %% unify solution to our grid to solve
 
-%% make sure all rows distinct
-maplist(all_distinct, S_rows).
+sudoku(Grid, Rows) :-
+  %% write(Grid),
+
+  append(Rows, Vs), Vs ins 1..9,
+  maplist(all_distinct, Rows),
+  transpose(Rows, Columns),     
+  maplist(all_distinct, Columns),
+  %% each row of the grid
+  %% this will need to be the subgrids instead
+  Rows = [A,B,C,D,E,F,G,H,I], 
+
+  %% get each region
+  nth0(0, Grid, Column_1),  
+  nth0(1, Grid, Column_2),  
+  nth0(2, Grid, Column_3),  
+  nth0(3, Grid, Column_4),  
+  nth0(4, Grid, Column_5),  
+  nth0(5, Grid, Column_6),
+  nth0(6, Grid, Column_7),  
+  nth0(7, Grid, Column_8),  
+  nth0(8, Grid, Column_9),
+
+  blocks(A, B, C), blocks(D, E, F), blocks(G, H, I),     
+  maplist(label, Rows).      
+ 
+blocks([], [], []).       
+blocks([A,B,C|Bs1], [D,E,F|Bs2], [G,H,I|Bs3]) :-  
+  all_distinct([A,B,C,D,E,F,G,H,I]),      
+  blocks(Bs1, Bs2, Bs3).
+
+solve(G, S, X) :-
+	%% write(G),
+	sudoku(G, S).
